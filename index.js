@@ -1,27 +1,19 @@
 const express = require('express');
-const mysql = require('mysql');
+
 const dotenv = require('dotenv');
-dotenv.config({ path: './.env'});
-const db = mysql.createConnection({
-    host: process.env.DB_host,
-    user: process.env.DB_user,
-    password: process.env.DB_PWD,
-    database: process.env.DB
-});
-db.connect( (error)=>{
-    if (error) {
-        console.log(error);
-    }
-    console.log('DATABASE CONNECTED...')
-});
+dotenv.config({ path: './.env' });
+
+const route = require('./routes/routes');
+
+const connection = require ('./models/connection')
 
 const app = express();
 const port = 3000;
 
-app.set('view_engine', 'hbs')
+app.use(express.static('assets'))
 
-app.get('/', (req, res) => {
-    res.send('Welcome')
-});
+app.set('view engine', 'hbs')
+
+app.use(route)
 
 app.listen(port, console.log(`server running on port ${port}`));
